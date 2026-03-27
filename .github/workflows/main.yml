@@ -2,22 +2,29 @@ name: build my angular app
 
 on:
   push:
-     branches: [ main ]
-      
+    branches: [ main ]
 
 jobs:
-   build-angular-app:
-       runs-on: ubuntu-latest
+  build-angular-app:
+    runs-on: ubuntu-latest
 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-       steps: 
-           - uses: actions/checkout@v4.2.2
-           - name: Setup Node js
-             uses: actions/setup-node@v4.2.0
-             with: 
-                node-version: 22.x
-           - name: Install Dependencies 
-             run: npm install
-           - name: build angular app
-             run: npm run build 
-           
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          # If your package-lock.json is in a subfolder, add this:
+          # cache-dependency-path: YOUR-FOLDER-NAME/package-lock.json
+
+      - name: Install Dependencies
+        # This tells GitHub to 'cd' into your folder before running the command
+        run: npm install
+        working-directory: ./YOUR-FOLDER-NAME 
+
+      - name: Build angular app
+        run: npm run build -- --configuration production
+        working-directory: ./YOUR-FOLDER-NAME
